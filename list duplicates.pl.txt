@@ -1,0 +1,4 @@
+rem_dup([], []).
+rem_dup([H|T], R) :-
+    member(H, T),
+    rem_dup(T, R).
