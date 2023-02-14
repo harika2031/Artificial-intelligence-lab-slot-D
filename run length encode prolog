@@ -1,0 +1,10 @@
+% Define the run_length_encode/2 predicate that takes a list as input and returns a run-length encoded list as output
+run_length_encode([], []).
+run_length_encode([X], [[1, X]]).
+run_length_encode([X, X | Tail], [[N2 | [X]] | EncodedTail]) :-
+    run_length_encode([X | Tail], [[N, X] | EncodedTail]),
+    N2 is N + 1.
+run_length_encode([X, Y | Tail], [[1, X] | EncodedTail]) :-
+    X \= Y,
+    run_length_encode([Y | Tail], EncodedTail).
+    
