@@ -1,0 +1,41 @@
+% Define the state of the monkey and its environment
+state(monkey, in_room).
+state(bananas, suspended).
+state(chair, in_room).
+state(stick, in_room).
+state(monkey_has(nothing)).
+
+% Define the actions that the monkey can take
+action(move_to(X)) :- state(monkey, in_room), state(X, in_room).
+action(climb_on(X)) :- state(monkey, in_room), state(X, in_room), X \== bananas.
+action(reach_for(X)) :- state(monkey, in_room), state(X, suspended).
+action(wave(X)) :- state(monkey, in_room), state(X, in_room), X \== bananas.
+action(grab(X)) :- state(monkey, in_room), state(X, in_room), X \== bananas, state(monkey_has(nothing)).
+
+% Define the result of each action
+result(move_to(X), state(monkey, X)).
+result(climb_on(X), state(monkey, standing_on(X))).
+result(reach_for(bananas), state(bananas, within_reach)).
+result(wave(stick), state(bananas, knocked_down)).
+result(grab(stick), state(monkey_has(stick))).
+
+% Define the best sequence of actions
+sequence([move_to(chair), climb_on(chair), grab(stick), wave(stick), grab(bananas)]).
+
+% Define a rule to check if a sequence of actions is possible
+possible([]).
+possible([FirstAction | RestActions]) :-
+  action(FirstAction),
+  result(FirstAction, NewState),
+  update(NewState),
+  possible(RestActions).
+
+% Define a rule to update the state of the environment after each action
+update(state(X, Y)) :-
+  retract(state(X, _)),
+  assert(state(X, Y)).
+
+% Define a rule to execute the best sequence of actions
+execute :-
+  sequence(Actions),
+  possible(Actions).
