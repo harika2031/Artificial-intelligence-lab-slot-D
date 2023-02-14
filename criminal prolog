@@ -1,0 +1,14 @@
+% Define the law/0 predicate, which states that it is a crime for an American to sell weapons to hostile nations.
+law :- criminal(robert).
+
+% Define the sold/2 predicate, which states that the first argument sold weapons to the second argument.
+sold(robert, country_a).
+
+% Define the hostile/1 predicate, which states that the argument is a hostile nation.
+hostile(country_a).
+
+% Define the american/1 predicate, which states that the argument is an American citizen.
+american(robert).
+
+% Define the criminal/1 predicate, which states that the argument is a criminal if they are an American and they sold weapons to a hostile nation.
+criminal(A) :- american(A), sold(A, B), hostile(B).
